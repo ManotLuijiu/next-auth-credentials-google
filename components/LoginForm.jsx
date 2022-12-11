@@ -1,7 +1,8 @@
 import { useFormik } from 'formik';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { HiAtSymbol, HiFingerPrint } from 'react-icons/hi';
 
@@ -10,7 +11,12 @@ import login_validate from '../lib/validate';
 import styles from '../styles/Form.module.css';
 
 export default function LoginForm() {
+  const router = useRouter();
+  const { data } = useSession();
+  // const { accessToken } = data;
   const [show, setShow] = useState(false);
+
+  console.log('accessToken', data);
 
   // formik hook
   const formik = useFormik({
@@ -28,7 +34,15 @@ export default function LoginForm() {
   console.log(formik.errors);
 
   async function onSubmit(values) {
-    console.log(values);
+    const status = await signIn('credentials', {
+      redirect: false,
+      email: values.email,
+      password: values.password,
+      callbackUrl: '/',
+    });
+
+    console.log(status);
+    if (status.ok) router.push(status.url);
   }
 
   // Google Handler function
@@ -52,7 +66,11 @@ export default function LoginForm() {
       </div>
       {/* form */}
       <form className="flex flex-col gap-5" onSubmit={formik.handleSubmit}>
-        <div className={styles.input_group}>
+        <div
+          className={`${styles.input_group} ${
+            formik.errors.email && formik.touched.email ? 'border-rose-600' : ''
+          }`}
+        >
           <input
             type="email"
             name="email"
@@ -71,7 +89,13 @@ export default function LoginForm() {
         ) : (
           <></>
         )}
-        <div className={styles.input_group}>
+        <div
+          className={`${styles.input_group} ${
+            formik.errors.password && formik.touched.password
+              ? 'border-rose-600'
+              : ''
+          }`}
+        >
           <input
             type={`${show ? 'text' : 'password'}`}
             name="password"

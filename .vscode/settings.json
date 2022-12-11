@@ -4,5 +4,8 @@
   "css.format.enable": true,
   "css.lint.unknownAtRules": "ignore",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "cSpell.words": [
+    "ปัญหาเกิดจาก"
+  ]
 }

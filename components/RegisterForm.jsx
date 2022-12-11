@@ -1,13 +1,18 @@
 import { useFormik } from 'formik';
-import Image from 'next/image';
+// import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { HiAtSymbol, HiFingerPrint, HiOutlineUser } from 'react-icons/hi';
+
+
 
 import { register_validate } from '../lib/validate';
 import styles from '../styles/Form.module.css';
 
+
 export default function RegisterForm() {
+  const router = useRouter();
   const [show, setShow] = useState({ password: false, cpassword: false });
 
   // const onSubmit = async (values) => {
@@ -26,7 +31,19 @@ export default function RegisterForm() {
   });
 
   async function onSubmit(values) {
-    console.log(values);
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(values),
+    };
+
+    await fetch('http://localhost:3000/api/auth/signup', options)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.ok) {
+          router.push('http://localhost:3000');
+        }
+      });
   }
 
   return (
@@ -40,7 +57,13 @@ export default function RegisterForm() {
       </div>
       {/* form */}
       <form className="flex flex-col gap-5" onSubmit={formik.handleSubmit}>
-        <div className={styles.input_group}>
+        <div
+          className={`${styles.input_group} ${
+            formik.errors.username && formik.touched.username
+              ? 'border-rose-600'
+              : ''
+          }`}
+        >
           <input
             type="text"
             name="username"
@@ -59,7 +82,11 @@ export default function RegisterForm() {
         ) : (
           <></>
         )}
-        <div className={styles.input_group}>
+        <div
+          className={`${styles.input_group} ${
+            formik.errors.email && formik.touched.email ? 'border-rose-600' : ''
+          }`}
+        >
           <input
             type="email"
             name="email"
@@ -78,7 +105,13 @@ export default function RegisterForm() {
         ) : (
           <></>
         )}
-        <div className={styles.input_group}>
+        <div
+          className={`${styles.input_group} ${
+            formik.errors.password && formik.touched.password
+              ? 'border-rose-600'
+              : ''
+          }`}
+        >
           <input
             type={`${show.password ? 'text' : 'password'}`}
             name="password"
@@ -101,7 +134,13 @@ export default function RegisterForm() {
         ) : (
           <></>
         )}
-        <div className={styles.input_group}>
+        <div
+          className={`${styles.input_group} ${
+            formik.errors.cpassword && formik.touched.cpassword
+              ? 'border-rose-600'
+              : ''
+          }`}
+        >
           <input
             type={`${show.cpassword ? 'text' : 'password'}`}
             name="cpassword"
@@ -128,28 +167,6 @@ export default function RegisterForm() {
         <div className="input-button">
           <button type="submit" className={styles.button}>
             Register
-          </button>
-        </div>
-        <div className="input-button">
-          <button type="button" className={styles.button_custom}>
-            Sign In with Google{' '}
-            <Image
-              src="/assets/google.svg"
-              alt="google"
-              width={20}
-              height={20}
-            />
-          </button>
-        </div>
-        <div className="input-button">
-          <button type="button" className={styles.button_custom}>
-            Sign In with Github{' '}
-            <Image
-              src="/assets/github.svg"
-              alt="github"
-              width={25}
-              height={25}
-            />
           </button>
         </div>
       </form>
