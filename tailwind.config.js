@@ -10,6 +10,7 @@ module.exports = {
     './layout/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
+    typography: () => ({}),
     extend: {
       colors: {
         primary: {

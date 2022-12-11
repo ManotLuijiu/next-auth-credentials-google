@@ -1,8 +1,12 @@
 import { Rubik, Sarabun } from '@next/font/google';
+import { SessionProvider } from 'next-auth/react';
+import { DefaultSeo } from 'next-seo';
+import { ThemeProvider } from 'next-themes';
 import type { AppProps } from 'next/app';
 import Router from 'next/router';
 import nprogress from 'nprogress';
 
+import SEO from '../next-seo.config';
 import '../styles/globals.css';
 import '../styles/globals.css';
 
@@ -25,10 +29,18 @@ const sarabun = Sarabun({
   variable: '--font-sarabun',
 });
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps) {
   return (
-    <main className={`${rubik.variable} font-sans ${sarabun.variable}`}>
-      <Component {...pageProps} />
-    </main>
+    <SessionProvider session={session}>
+      <DefaultSeo {...SEO} />
+      <ThemeProvider enableSystem={true} attribute="class">
+        <main className={`${rubik.variable} font-sans ${sarabun.variable}`}>
+          <Component {...pageProps} />
+        </main>
+      </ThemeProvider>
+    </SessionProvider>
   );
 }

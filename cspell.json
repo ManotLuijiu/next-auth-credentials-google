@@ -1,0 +1,19 @@
+{
+  "version": "0.2",
+  "ignorePaths": [
+    "node_modules/**"
+  ],
+  "dictionaryDefinitions": [],
+  "dictionaries": [],
+  "words": [],
+  "ignoreWords": [
+    "adipisicing",
+    "amet",
+    "blanditiis",
+    "cpassword",
+    "elit",
+    "expedita",
+    "omnis"
+  ],
+  "import": []
+}
